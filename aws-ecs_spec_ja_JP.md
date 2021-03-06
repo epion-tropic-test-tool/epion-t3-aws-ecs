@@ -39,6 +39,7 @@ AWSのECSへのアクセスを行う機能を提供します。
 |:---|:---|:---|:---|
 |[AwsEcsRunTask](#AwsEcsRunTask)|ECSTaskを実行します。  ||X|
 |[AwsEcsDescribeTask](#AwsEcsDescribeTask)|ECSTaskを参照します。  ||X|
+|[AwsEcsRunTaskWaitStopped](#AwsEcsRunTaskWaitStopped)|ECSTaskを実行します。  ||X|
 
 ------
 
@@ -96,6 +97,42 @@ commands :
   description : コマンドの詳細（任意）
   cluster : 対象のECSクラスタを指定します。
   taskArn : 参照する対象のタスクのARNを指定します。
+
+```
+
+------
+
+### AwsEcsRunTaskWaitStopped
+ECSTaskを実行します。
+#### Command Type
+- Assert : No
+- Evidence : __Yes__
+
+#### Functions
+- ECSTaskを実行します。
+- ECSTaskの実行結果をエビデンスとして保存します。（非同期実行結果となります）
+
+#### Structure
+```yaml
+commands : 
+  id : コマンドのID
+  command : 「AwsEcsRunTaskWaitStopped」固定
+  summary : コマンドの概要（任意）
+  description : コマンドの詳細（任意）
+  cluster : 対象のECSクラスタを指定します。
+  taskDefinition : 対象のタスク定義を指定します。
+  launchType : 起動タイプを指定します。「EC2」もしくは「FARGATE」を指定してください。
+  platformVersion : プラットフォームバージョンを指定します。
+  startedBy : 起動元を指定します。起動元を特定したい場合に有効です。
+  networkConfiguration : 起動時のネットワーク設定を行います。
+    subnets : 起動するSubnetを指定します。複数指定可能です。
+    securityGroups : 起動時に適用するセキュリティグループを指定します。複数指定可能です。
+    assignPublicIp : 公開IPを付与するかを指定します。「DISABLED」or「ENABLED」を指定してください。
+  taskOverride : タスク定義の上書き設定を行います。
+    containerOverride : 起動するSubnetを指定します。複数指定可能です。
+      name : 名称を指定します。
+      environment : 環境変数を設定します。
+  stoppedCheckInterval : タスクの終了確認を行うインターバルをミリ秒で指定します。10秒以上の間隔をあけることを推奨します。
 
 ```
 
