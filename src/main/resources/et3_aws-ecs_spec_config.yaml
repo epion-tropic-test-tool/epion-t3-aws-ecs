@@ -1,0 +1,191 @@
+t3: 1.0
+#####################################
+# 対象言語
+#####################################
+languages:
+  - ja_JP
+#####################################
+# カスタム機能定義
+#####################################
+info:
+  name: aws-ecs
+  customPackage: com.epion_t3.aws.ecs
+  summary:
+    - lang: ja_JP
+      contents: "AWSのECSへのアクセスを行う機能を提供します。"
+  description:
+    - lang: ja_JP
+      contents: "AWSのECSへのアクセスを行う機能を提供します。"
+#####################################
+# コマンド定義
+#####################################
+commands:
+  ##########################
+  # AwsEcsRunTask
+  ##########################
+  - id: AwsEcsRunTask
+    evidenceCommand: true
+    summary:
+      - lang: ja_JP
+        contents: "ECSTaskを実行します。"
+    testItem:
+      - order: 1
+        summary:
+          - lang: ja_JP
+            contents: "ECSTaskを実行します。"
+    function:
+      - order: 1
+        summary:
+          - lang: ja_JP
+            contents: "ECSTaskを実行します。"
+      - order: 2
+        summary:
+          - lang: ja_JP
+            contents: "ECSTaskの実行結果をエビデンスとして保存します。（非同期実行結果となります）"
+    structure:
+      - order: 1
+        name: id
+        required: true
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: コマンドのID
+      - order: 2
+        name: command
+        required: true
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: 「AwsEcsRunTask」固定
+      - order: 3
+        name: summary
+        required: false
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: コマンドの概要（任意）
+      - order: 4
+        name: description
+        required: false
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: コマンドの詳細（任意）
+      - order: 5
+        name: cluster
+        required: true
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: "対象のECSクラスタを指定します。"
+      - order: 6
+        name: taskDefinition
+        required: true
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: "対象のタスク定義を指定します。"
+      - order: 7
+        name: launchType
+        required: true
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: "起動タイプを指定します。「EC2」もしくは「FARGATE」を指定してください。"
+      - order: 7
+        name: launchType
+        required: true
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: "起動タイプを指定します。「EC2」もしくは「FARGATE」を指定してください。"
+      - order: 8
+        name: platformVersion
+        required: false
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: "プラットフォームバージョンを指定します。"
+      - order: 9
+        name: startedBy
+        required: false
+        type: string
+        summary:
+          - lang: ja_JP
+            contents: "起動元を指定します。起動元を特定したい場合に有効です。"
+      - order: 10
+        name: networkConfiguration
+        required: true
+        type: object
+        summary:
+          - lang: ja_JP
+            contents: "起動時のネットワーク設定を行います。"
+        property:
+          - order: 1
+            name: subnets
+            required: true
+            type: array
+            summary:
+              - lang: ja_JP
+                contents: "起動するSubnetを指定します。複数指定可能です。"
+            property:
+              - order: 1
+                name: subnet
+                required: true
+                type: string
+                summary:
+                  - lang: ja_JP
+                    contents: "Subnetを指定します。"
+          - order: 2
+            name: securityGroups
+            required: true
+            type: array
+            summary:
+              - lang: ja_JP
+                contents: "起動時に適用するセキュリティグループを指定します。複数指定可能です。"
+            property:
+              - order: 1
+                name: securityGroup
+                required: true
+                type: string
+                summary:
+                  - lang: ja_JP
+                    contents: "セキュリティグループを指定します。"
+      - order: 11
+        name: taskOverride
+        required: false
+        type: object
+        summary:
+          - lang: ja_JP
+            contents: "タスク定義の上書き設定を行います。"
+        property:
+          - order: 1
+            name: containerOverride
+            required: false
+            type: object
+            summary:
+              - lang: ja_JP
+                contents: "起動するSubnetを指定します。複数指定可能です。"
+            property:
+              - order: 1
+                name: name
+                required: false
+                type: string
+                summary:
+                  - lang: ja_JP
+                    contents: "名称を指定します。"
+              - order: 2
+                name: environment
+                required: false
+                type: map
+                summary:
+                  - lang: ja_JP
+                    contents: "環境変数を設定します。"
+#####################################
+# メッセージ定義
+#####################################
+messages:
+  - id: com.epion_t3.aws.ecs.err.9001
+    message:
+      - lang: ja_JP
+        contents: "ECSTaskの起動に失敗しました。"

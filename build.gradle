@@ -14,10 +14,10 @@ ext {
     // バージョン定義
     versionMajor = 0
     versionMinor = 0
-    versionPatch = 1
+    versionPatch = 4
 
     // カスタムパッケージ名
-    customPackageName = 'custom'
+    customPackageName = 'aws-ecs'
 
     // アーティファクト関連
     group 'com.epion_t3'
@@ -47,6 +47,13 @@ dependencies {
 
     // Core Library
     api "com.epion_t3:epion-t3-core:0.0.4"
+    api "com.epion_t3:epion-t3-aws-core:0.0.4"
+
+    // AWS BOM
+    implementation platform('software.amazon.awssdk:bom:2.14.11')
+
+    // AWS
+    api "software.amazon.awssdk:ecs"
 
     // For Develop
     compileOnly "org.projectlombok:lombok:1.18.6"
@@ -124,7 +131,8 @@ bintray {
     user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
     key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
     configurations = ['archives']
-
+    publish = true
+    override = true
     pkg {
         repo = 'maven'
         name = project.name

@@ -17,3 +17,8 @@ jobs:
       - run: chmod +x gradlew
       - name: Build
         run: ./gradlew clean build
+      - name: Publish
+        env:
+          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
+          BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+        run: ./gradlew bintrayUpload -PbintrayUser=${BINTRAY_USER} -PbintrayApiKey=${BINTRAY_API_KEY}
