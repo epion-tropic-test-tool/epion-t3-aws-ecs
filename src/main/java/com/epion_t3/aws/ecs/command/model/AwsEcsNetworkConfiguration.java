@@ -23,4 +23,9 @@ public class AwsEcsNetworkConfiguration implements Serializable {
      * 起動時に適用するセキュリティグループ.
      */
     private List<String> securityGroups;
+
+    /**
+     * パブリックIPを自動付与するかの指定.
+     */
+    private String assignPublicIp;
 }

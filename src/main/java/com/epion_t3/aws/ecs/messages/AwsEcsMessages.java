@@ -10,7 +10,19 @@ import com.epion_t3.core.message.Messages;
  */
 public enum AwsEcsMessages implements Messages {
 
-    /** ECSTaskの起動に失敗しました。 */
+    /** ECSTaskの一部または全ての起動に失敗しました.ログを確認してください。 */
+    AWS_ECS_ERR_9003("com.epion_t3.aws.ecs.err.9003"),
+
+    /**
+     * ECSTaskの起動時のパブリックIPの自動付与設定（assignPublicIp）の値が異なります.「DISABLED」or「ENABLED」を指定してください.
+     * assignPublicIp: {0}
+     */
+    AWS_ECS_ERR_9002("com.epion_t3.aws.ecs.err.9002"),
+
+    /** ECSTaskの参照に失敗しました. */
+    AWS_ECS_ERR_9004("com.epion_t3.aws.ecs.err.9004"),
+
+    /** ECSTaskの起動に失敗しました. */
     AWS_ECS_ERR_9001("com.epion_t3.aws.ecs.err.9001");
 
     /** メッセージコード */

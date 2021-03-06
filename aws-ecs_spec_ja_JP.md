@@ -66,6 +66,7 @@ commands :
   networkConfiguration : 起動時のネットワーク設定を行います。
     subnets : 起動するSubnetを指定します。複数指定可能です。
     securityGroups : 起動時に適用するセキュリティグループを指定します。複数指定可能です。
+    assignPublicIp : 公開IPを付与するかを指定します。「DISABLED」or「ENABLED」を指定してください。
   taskOverride : タスク定義の上書き設定を行います。
     containerOverride : 起動するSubnetを指定します。複数指定可能です。
       name : 名称を指定します。
@@ -88,4 +89,7 @@ commands :
 
 |MessageID|MessageContents|
 |:---|:---|
-|com.epion_t3.aws.ecs.err.9001|ECSTaskの起動に失敗しました。|
+|com.epion_t3.aws.ecs.err.9003|ECSTaskの一部または全ての起動に失敗しました.ログを確認してください。|
+|com.epion_t3.aws.ecs.err.9002|ECSTaskの起動時のパブリックIPの自動付与設定（assignPublicIp）の値が異なります.「DISABLED」or「ENABLED」を指定してください. assignPublicIp: {0}|
+|com.epion_t3.aws.ecs.err.9004|ECSTaskの参照に失敗しました.|
+|com.epion_t3.aws.ecs.err.9001|ECSTaskの起動に失敗しました.|
