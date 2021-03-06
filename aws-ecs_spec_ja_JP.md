@@ -38,6 +38,7 @@ AWSのECSへのアクセスを行う機能を提供します。
 |Name|Summary|Assert|Evidence|
 |:---|:---|:---|:---|
 |[AwsEcsRunTask](#AwsEcsRunTask)|ECSTaskを実行します。  ||X|
+|[AwsEcsDescribeTask](#AwsEcsDescribeTask)|ECSTaskを参照します。  ||X|
 
 ------
 
@@ -71,6 +72,30 @@ commands :
     containerOverride : 起動するSubnetを指定します。複数指定可能です。
       name : 名称を指定します。
       environment : 環境変数を設定します。
+
+```
+
+------
+
+### AwsEcsDescribeTask
+ECSTaskを参照します。
+#### Command Type
+- Assert : No
+- Evidence : __Yes__
+
+#### Functions
+- ECSTaskを参照します。
+- ECSTaskの参照結果をエビデンスとして保存します。
+
+#### Structure
+```yaml
+commands : 
+  id : コマンドのID
+  command : 「AwsEcsDescribeTask」固定
+  summary : コマンドの概要（任意）
+  description : コマンドの詳細（任意）
+  cluster : 対象のECSクラスタを指定します。
+  taskArn : 参照する対象のタスクのARNを指定します。
 
 ```
 
