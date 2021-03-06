@@ -92,13 +92,6 @@ commands:
         summary:
           - lang: ja_JP
             contents: "起動タイプを指定します。「EC2」もしくは「FARGATE」を指定してください。"
-      - order: 7
-        name: launchType
-        required: true
-        type: string
-        summary:
-          - lang: ja_JP
-            contents: "起動タイプを指定します。「EC2」もしくは「FARGATE」を指定してください。"
       - order: 8
         name: platformVersion
         required: false

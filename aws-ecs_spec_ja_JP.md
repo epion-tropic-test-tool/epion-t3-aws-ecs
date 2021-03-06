@@ -61,7 +61,6 @@ commands :
   cluster : 対象のECSクラスタを指定します。
   taskDefinition : 対象のタスク定義を指定します。
   launchType : 起動タイプを指定します。「EC2」もしくは「FARGATE」を指定してください。
-  launchType : 起動タイプを指定します。「EC2」もしくは「FARGATE」を指定してください。
   platformVersion : プラットフォームバージョンを指定します。
   startedBy : 起動元を指定します。起動元を特定したい場合に有効です。
   networkConfiguration : 起動時のネットワーク設定を行います。
