@@ -3,40 +3,41 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
+    id 'signing'
     id 'maven'
     id 'maven-publish'
     id 'jacoco'
     id "com.diffplug.gradle.spotless"
-    id "com.jfrog.bintray"
 }
 
 ext {
     // バージョン定義
     versionMajor = 0
-    versionMinor = 0
-    versionPatch = 4
+    versionMinor = 1
+    versionPatch = 0
 
     // カスタムパッケージ名
     customPackageName = 'aws-ecs'
 
     // アーティファクト関連
-    group 'com.epion_t3'
+    group 'com.epion-t3'
     version "${versionMajor}.${versionMinor}.${versionPatch}"
 
     // Document
     siteUrl = 'https://docs.epion-t3.com'
 
-    // SCM（GitHub）
-    githubUrl = "https://github.com/epion-tropic-test-tool/epion-t3-${customPackageName}"
+    // Sonatype Repo Urls
+    releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+    snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
 
+    // developper
+    developperId = 'takashno'
+    developperName = 'Nozomu Takashima'
+    developperEmail = 'epion.tropic.test.tool@gmail.com'
 }
 
 repositories {
-    maven {
-        url "https://dl.bintray.com/epion-tropic-test-tool/maven"
-    }
     mavenCentral()
-    jcenter()
 }
 
 configurations {
@@ -46,11 +47,11 @@ configurations {
 dependencies {
 
     // Core Library
-    api "com.epion_t3:epion-t3-core:0.0.4"
-    api "com.epion_t3:epion-t3-aws-core:0.0.4"
+    api "com.epion-t3:epion-t3-core:0.1.0"
+    api "com.epion-t3:epion-t3-aws-core:0.1.0"
 
     // AWS BOM
-    implementation platform('software.amazon.awssdk:bom:2.14.11')
+    implementation platform('software.amazon.awssdk:bom:2.16.99')
 
     // AWS
     api "software.amazon.awssdk:ecs"
@@ -75,26 +76,23 @@ tasks.withType(Javadoc) {
 
 // Java
 tasks.withType(JavaCompile) {
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
+    sourceCompatibility = 11
+    targetCompatibility = 11
     it.options.encoding = 'UTF-8'
 }
 
-// JavaDoc Jar packaging
-task packageJavadoc(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
-// Source Jar Packaging
-task packageSources(type: Jar, dependsOn: classes) {
-    from sourceSets.main.allSource
-    classifier = 'source'
-}
-
-artifacts {
-    archives packageJavadoc
-    archives packageSources
+spotless {
+    java {
+        enforceCheck = true
+        licenseHeaderFile rootProject.file('./formatter/LICENSE')
+        eclipse().configFile rootProject.file('./formatter/formatter.xml')
+        lineEndings 'UNIX'
+    }
 }
 
 // CodeCov
@@ -117,61 +115,58 @@ codeCoverageReport.dependsOn {
     subprojects*.test
 }
 
-spotless {
-    java {
-        enforceCheck = true
-        licenseHeaderFile rootProject.file('./formatter/LICENSE')
-        eclipse().configFile rootProject.file('./formatter/formatter.xml')
-        lineEndings 'UNIX'
-    }
-}
-
-// Library Publish
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    configurations = ['archives']
-    publish = true
-    override = true
-    pkg {
-        repo = 'maven'
-        name = project.name
-        userOrg = 'epion-tropic-test-tool'
-        licenses = ['Apache-2.0']
-        websiteUrl = siteUrl
-        issueTrackerUrl = githubUrl + '/blob/master/LICENSE'
-        vcsUrl = githubUrl + '.git'
-        issueTrackerUrl = githubUrl + '/issues'
-        publicDownloadNumbers = true
-        version {
-            name = project.version
-        }
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            name project.name
-            url siteUrl
-
-            packaging 'jar'
-            groupId project.group
-            artifactId project.name
-            version project.version
-
-            licenses {
-                license {
-                    name 'Apache License 2.0'
-                    url 'http://www.apache.org/licenses/'
-                    distribution 'repo'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = project.name
+            version = project.hasProperty('snapshot') ? project.version + '-SNAPSHOT' : project.version
+            from components.java
+            pom {
+                name = project.name
+                description = "${project.name} library"
+                url = "https://github.com/epion-tropic-test-tool/${project.name}"
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = project.developperId
+                        name = project.developperName
+                        email = project.developperEmail
+                    }
+                }
+                scm {
+                    connection = "scm:git:git://github.com/epion-tropic-test-tool/${project.name}.git"
+                    developerConnection = "git@github.com:epion-tropic-test-tool/${project.name}.git"
+                    url = "https://github.com/epion-tropic-test-tool/${project.name}"
                 }
             }
-            scm {
-                connection githubUrl + '.git'
-                url githubUrl
+        }
+    }
+    repositories {
+        maven {
+            name="OSSRH"
+            url = project.hasProperty('snapshot') ? project.snapshotsRepoUrl : project.releasesRepoUrl
+            def sonatypeUser = project.hasProperty('sonatypeUser') ? project.property('sonatypeUser') : System.getenv('MAVEN_USERNAME')
+            def sonatypePassword = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : System.getenv('MAVEN_PASSWORD')
+            credentials {
+                username = sonatypeUser
+                password = sonatypePassword
             }
         }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
     }
 }
 
@@ -182,10 +177,6 @@ task devtoolsGenerate(type: JavaExec) {
             '-t',
             "${projectDir}/src/main/resources/et3_${customPackageName}_spec_config.yaml",
             '-d',
-            "${projectDir}",
-            "-m",
-            "${projectDir}/src/main/resources",
-            "-j",
-            "${projectDir}/src/main/java/"
+            "${projectDir}"
     ]
 }
